@@ -1,0 +1,3 @@
+INSERT INTO offer (id, name, description, enabled, price, currency) VALUES (1, 'First offer', 'Description for the first offer', true, 20, 'RON', 1);
+INSERT INTO offer (id, name, description, enabled, price, currency) VALUES (2, 'Second offer', 'Description for the second offer', true, 15.20, 'EUR', 2);
+INSERT INTO offer (id, name, description, enabled, price, currency) VALUES (3, 'Third offer', 'Description for the third offer', false, 0.50, 'EUR', 2);

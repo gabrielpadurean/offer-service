@@ -1,22 +1,46 @@
 package org.personal.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Currency;
 import java.util.Date;
+import java.util.Objects;
+
+import static javax.persistence.GenerationType.AUTO;
 
 /**
  * @author gabrielpadurean
  */
+@Entity
 public class Offer {
+    @Id
+    @GeneratedValue(strategy = AUTO)
     private long id;
 
-    private String name;
-    private String description;
-    private boolean enabled;
+    @Column(nullable = false)
+    private long productId;
 
-    private double price;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private boolean enabled = false;
+
+    @Column(nullable = false)
+    private double price = 0d;
+
+    @Column(nullable = false)
     private Currency currency;
 
+    @Column(nullable = false)
     private Date startDate;
+
+    @Column(nullable = false)
     private Date endDate;
 
 
@@ -26,6 +50,14 @@ public class Offer {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -82,5 +114,45 @@ public class Offer {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return id == offer.id &&
+                productId == offer.productId &&
+                enabled == offer.enabled &&
+                Double.compare(offer.price, price) == 0 &&
+                Objects.equals(name, offer.name) &&
+                Objects.equals(description, offer.description) &&
+                Objects.equals(currency, offer.currency) &&
+                Objects.equals(startDate, offer.startDate) &&
+                Objects.equals(endDate, offer.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, name, description, enabled, price, currency, startDate, endDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "id=" + id +
+                ", productId='" + productId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", enabled=" + enabled +
+                ", price=" + price +
+                ", currency=" + currency +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
 }
