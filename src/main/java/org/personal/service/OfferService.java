@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * @author gabrielpadurean
  */
@@ -36,7 +38,7 @@ public class OfferService {
         if (offerRepository.findOne(offer.getId()) != null) {
             return offerRepository.save(offer);
         } else {
-            throw new NotFoundOfferException();
+            throw new NotFoundOfferException(format("Offer with id=%d not found", offer.getId()));
         }
     }
 
@@ -47,7 +49,7 @@ public class OfferService {
             offer.setActive(false);
             offerRepository.save(offer);
         } else {
-            throw new NotFoundOfferException();
+            throw new NotFoundOfferException(format("Offer with id=%d not found", offerId));
         }
     }
 
@@ -55,7 +57,7 @@ public class OfferService {
         if (offerRepository.findOne(offerId) != null) {
             offerRepository.delete(offerId);
         } else {
-            throw new NotFoundOfferException();
+            throw new NotFoundOfferException(format("Offer with id=%d not found", offerId));
         }
     }
 
@@ -63,14 +65,14 @@ public class OfferService {
         Offer offer = offerRepository.findOne(offerId);
 
         if (offer == null) {
-            throw new NotFoundOfferException();
+            throw new NotFoundOfferException(format("Offer with id=%d not found", offerId));
         } else {
             Instant now = Instant.now();
             Instant startDate = offer.getStartDate().toInstant();
             Instant endDate = offer.getEndDate().toInstant();
 
             if (!offer.isEnabled() || now.isBefore(startDate) || now.isAfter(endDate)) {
-                throw new ExpiredOfferException();
+                throw new ExpiredOfferException(format("Offer with id=%d was canceled or expired", offerId));
             }
         }
 

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * @author gabrielpadurean
  */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class NotFoundOfferException extends RuntimeException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class MissingFieldException extends RuntimeException {
 
-    public NotFoundOfferException(String message) {
+    public MissingFieldException(String message) {
         super(message);
     }
 }

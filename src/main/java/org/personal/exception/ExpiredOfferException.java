@@ -8,4 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(HttpStatus.GONE)
 public class ExpiredOfferException extends RuntimeException {
+
+    public ExpiredOfferException(String message) {
+        super(message);
+    }
 }

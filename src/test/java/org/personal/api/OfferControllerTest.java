@@ -9,12 +9,13 @@ import org.personal.service.OfferService;
 import org.personal.service.ValidatorService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,9 +49,10 @@ public class OfferControllerTest {
         doNothing().when(validatorService).validate(offer);
         when(offerService.save(offer)).thenReturn(offer);
 
-        Offer createdOffer = victim.createOffer(offer);
+        ResponseEntity<Offer> createOfferResponse = victim.createOffer(offer);
 
-        assertEquals(offer, createdOffer);
+        assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
+        assertEquals(offer, createOfferResponse.getBody());
         verify(validatorService, times(1)).validate(offer);
         verify(offerService, times(1)).save(offer);
     }
@@ -62,9 +64,10 @@ public class OfferControllerTest {
         doNothing().when(validatorService).validate(offer);
         when(offerService.update(offer)).thenReturn(offer);
 
-        Offer updatedOffer = victim.updateOffer(offer);
+        ResponseEntity<Offer> updateOfferResponse = victim.updateOffer(offer);
 
-        assertEquals(offer, updatedOffer);
+        assertEquals(HttpStatus.OK, updateOfferResponse.getStatusCode());
+        assertEquals(offer, updateOfferResponse.getBody());
         verify(validatorService, times(1)).validate(offer);
         verify(offerService, times(1)).update(offer);
     }
@@ -75,8 +78,9 @@ public class OfferControllerTest {
 
         doNothing().when(offerService).delete(offerId);
 
-        victim.deleteOffer(offerId);
+        ResponseEntity<Offer> deleteOfferResponse = victim.deleteOffer(offerId);
 
+        assertEquals(HttpStatus.NO_CONTENT, deleteOfferResponse.getStatusCode());
         verify(offerService, times(1)).delete(offerId);
     }
 
@@ -86,8 +90,9 @@ public class OfferControllerTest {
 
         doNothing().when(offerService).cancel(offerId);
 
-        victim.cancelOffer(offerId);
+        ResponseEntity<Offer> cancelOfferResponse = victim.cancelOffer(offerId);
 
+        assertEquals(HttpStatus.NO_CONTENT, cancelOfferResponse.getStatusCode());
         verify(offerService, times(1)).cancel(offerId);
     }
 
@@ -98,10 +103,10 @@ public class OfferControllerTest {
 
         when(offerService.get(offerId)).thenReturn(offer);
 
-        Offer retrievedOffer = victim.getOffer(offerId);
+        ResponseEntity<Offer> retrieveOfferResponse = victim.getOffer(offerId);
 
-        assertNotNull(offer);
-        assertEquals(offer, retrievedOffer);
+        assertEquals(HttpStatus.OK, retrieveOfferResponse.getStatusCode());
+        assertEquals(offer, retrieveOfferResponse.getBody());
         verify(offerService, times(1)).get(offerId);
     }
 
@@ -111,9 +116,10 @@ public class OfferControllerTest {
 
         when(offerService.get(pageable)).thenReturn(Collections.emptyList());
 
-        List<Offer> offers = victim.getOffers(pageable);
+        ResponseEntity<List<Offer>> retrieveOffersResponse = victim.getOffers(pageable);
 
-        assertEquals(0, offers.size());
+        assertEquals(HttpStatus.OK, retrieveOffersResponse.getStatusCode());
+        assertEquals(0, retrieveOffersResponse.getBody().size());
         verify(offerService, times(1)).get(pageable);
     }
 }
