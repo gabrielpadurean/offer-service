@@ -25,6 +25,10 @@ public class OfferService {
 
 
     public Offer save(Offer offer) {
+        if (offer.getId() != null) {
+            throw new IllegalArgumentException("Offer id is not allowed for this operation");
+        }
+
         return offerRepository.save(offer);
     }
 
@@ -36,7 +40,7 @@ public class OfferService {
         }
     }
 
-    public void cancel(long offerId) {
+    public void cancel(Long offerId) {
         Offer offer = offerRepository.findOne(offerId);
 
         if (offer != null) {
@@ -47,7 +51,7 @@ public class OfferService {
         }
     }
 
-    public void delete(long offerId) {
+    public void delete(Long offerId) {
         if (offerRepository.findOne(offerId) != null) {
             offerRepository.delete(offerId);
         } else {
@@ -55,7 +59,7 @@ public class OfferService {
         }
     }
 
-    public Offer get(long offerId) {
+    public Offer get(Long offerId) {
         Offer offer = offerRepository.findOne(offerId);
 
         if (offer == null) {

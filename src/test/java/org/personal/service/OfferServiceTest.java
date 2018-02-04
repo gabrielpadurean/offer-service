@@ -11,9 +11,6 @@ import org.personal.exception.ExpiredOfferException;
 import org.personal.exception.NotFoundOfferException;
 import org.personal.repository.OfferRepository;
 
-import java.util.Date;
-
-import static java.lang.System.currentTimeMillis;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
@@ -21,6 +18,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.personal.util.OfferUtils.createDummyCanceledOffer;
+import static org.personal.util.OfferUtils.createDummyExpiredOffer;
 import static org.personal.util.OfferUtils.createDummyOffer;
 
 /**
@@ -65,8 +64,9 @@ public class OfferServiceTest {
 
     @Test
     public void testUpdateSuccessfully() {
+        long offerId = 1;
         Offer offer = createDummyOffer();
-        long offerId = offer.getId();
+        offer.setId(offerId);
 
         when(offerRepository.findOne(offerId)).thenReturn(offer);
         when(offerRepository.save(offer)).thenReturn(offer);
@@ -80,8 +80,8 @@ public class OfferServiceTest {
 
     @Test(expected = NotFoundOfferException.class)
     public void testUpdateNotFoundOffer() {
+        long offerId = 1;
         Offer offer = createDummyOffer();
-        long offerId = offer.getId();
 
         when(offerRepository.findOne(offerId)).thenReturn(null);
 
@@ -93,8 +93,8 @@ public class OfferServiceTest {
 
     @Test
     public void testCancelSuccessfully() {
+        long offerId = 1;
         Offer offer = createDummyOffer();
-        long offerId = offer.getId();
 
         when(offerRepository.findOne(offerId)).thenReturn(offer);
         when(offerRepository.save(offer)).thenReturn(offer);
@@ -108,8 +108,7 @@ public class OfferServiceTest {
 
     @Test(expected = NotFoundOfferException.class)
     public void testCancelNotFoundOffer() {
-        Offer offer = createDummyOffer();
-        long offerId = offer.getId();
+        long offerId = 1;
 
         when(offerRepository.findOne(offerId)).thenReturn(null);
 
@@ -145,8 +144,8 @@ public class OfferServiceTest {
 
     @Test
     public void testGetOfferSuccessfully() {
+        long offerId = 1;
         Offer offer = createDummyOffer();
-        long offerId = offer.getId();
 
         when(offerRepository.findOne(offerId)).thenReturn(offer);
 
@@ -158,9 +157,8 @@ public class OfferServiceTest {
 
     @Test(expected = ExpiredOfferException.class)
     public void testGetInactiveOffer() {
-        Offer offer = createDummyOffer();
-        offer.setActive(false);
-        long offerId = offer.getId();
+        long offerId = 1;
+        Offer offer = createDummyCanceledOffer();
 
         when(offerRepository.findOne(offerId)).thenReturn(offer);
 
@@ -171,15 +169,8 @@ public class OfferServiceTest {
 
     @Test(expected = ExpiredOfferException.class)
     public void testGetExpiredOffer() {
-        Offer offer = createDummyOffer();
-        long offerId = offer.getId();
-
-        /**
-         * Move offer validity in the past.
-         */
-        long currentTimeMillis = currentTimeMillis();
-        offer.setStartDate(new Date(currentTimeMillis - (1000 * 60)));
-        offer.setEndDate(new Date(currentTimeMillis - (1000 * 30)));
+        long offerId = 1;
+        Offer offer = createDummyExpiredOffer();
 
         when(offerRepository.findOne(offerId)).thenReturn(offer);
 

@@ -6,6 +6,7 @@ import org.personal.service.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class OfferController {
 
 
     @RequestMapping(value = "/offers", method = RequestMethod.POST)
-    public Offer createOffer(Offer offer) {
+    public Offer createOffer(@RequestBody Offer offer) {
         validatorService.validate(offer);
 
         return offerService.save(offer);
@@ -39,17 +40,17 @@ public class OfferController {
     }
 
     @RequestMapping(value = "/offers/{offerId}", method = RequestMethod.DELETE)
-    public void deleteOffer(@PathVariable long offerId) {
+    public void deleteOffer(@PathVariable Long offerId) {
         offerService.delete(offerId);
     }
 
     @RequestMapping(value = "/offers/{offerId}/cancel", method = RequestMethod.PUT)
-    public void cancelOffer(@PathVariable long offerId) {
+    public void cancelOffer(@PathVariable Long offerId) {
         offerService.cancel(offerId);
     }
 
     @RequestMapping(value = "/offers/{offerId}", method = RequestMethod.GET)
-    public Offer getOffer(@PathVariable long offerId) {
+    public Offer getOffer(@PathVariable Long offerId) {
         return offerService.get(offerId);
     }
 

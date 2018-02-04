@@ -94,7 +94,7 @@ public class OfferControllerTest {
     @Test
     public void testGetOfferSuccessfully() {
         Offer offer = createDummyOffer();
-        long offerId = offer.getId();
+        Long offerId = offer.getId();
 
         when(offerService.get(offerId)).thenReturn(offer);
 

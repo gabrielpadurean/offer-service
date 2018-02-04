@@ -17,10 +17,10 @@ import static javax.persistence.GenerationType.AUTO;
 public class Offer {
     @Id
     @GeneratedValue(strategy = AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
-    private long productId;
+    private Long productId;
 
     @Column(nullable = false)
     private String name;
@@ -44,19 +44,19 @@ public class Offer {
     private Date endDate;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
