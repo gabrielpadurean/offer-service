@@ -10,12 +10,17 @@ import org.personal.service.ValidatorService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.personal.util.OfferUtils.createDummyOffer;
 
 /**
  * @author gabrielpadurean
@@ -110,25 +115,5 @@ public class OfferControllerTest {
 
         assertEquals(0, offers.size());
         verify(offerService, times(1)).get(pageable);
-    }
-
-    private Offer createDummyOffer() {
-        Offer offer = new Offer();
-
-        offer.setId(1);
-        offer.setProductId(1);
-        offer.setName("A test offer");
-        offer.setDescription("Test description");
-        offer.setActive(true);
-        offer.setPrice(5d);
-        offer.setCurrency(Currency.getInstance("EUR"));
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 5);
-
-        offer.setStartDate(new Date());
-        offer.setEndDate(calendar.getTime());
-
-        return offer;
     }
 }
