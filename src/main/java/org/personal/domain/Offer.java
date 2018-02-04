@@ -125,10 +125,10 @@ public class Offer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offer = (Offer) o;
-        return id == offer.id &&
-                productId == offer.productId &&
-                enabled == offer.enabled &&
+        return enabled == offer.enabled &&
                 Double.compare(offer.price, price) == 0 &&
+                Objects.equals(id, offer.id) &&
+                Objects.equals(productId, offer.productId) &&
                 Objects.equals(name, offer.name) &&
                 Objects.equals(description, offer.description) &&
                 Objects.equals(currency, offer.currency) &&

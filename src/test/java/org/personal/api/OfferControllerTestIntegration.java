@@ -6,18 +6,21 @@ import org.personal.domain.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.personal.util.OfferUtils.createDummyOffer;
+import static org.personal.util.OfferUtils.createDummyOfferValidFor;
 
 /**
  * @author gabrielpadurean
@@ -31,9 +34,7 @@ public class OfferControllerTestIntegration {
 
     @Test
     public void testCreateOfferSuccessfully() {
-        Offer initialOffer = createDummyOffer();
-
-        ResponseEntity<Offer> createOfferResponse = restTemplate.postForEntity("/offers", initialOffer, Offer.class);
+        ResponseEntity<Offer> createOfferResponse = restTemplate.postForEntity("/offers", createDummyOffer(), Offer.class);
         Offer createdOffer = createOfferResponse.getBody();
         assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
         assertTrue(createdOffer.getId() > 0);
@@ -94,5 +95,75 @@ public class OfferControllerTestIntegration {
     public void testCancelNonExistingOffer() {
         ResponseEntity<String> cancelOfferResponse = restTemplate.exchange("/offers/{offerId}/cancel", HttpMethod.PUT, null, String.class, 9999);
         assertEquals(HttpStatus.NOT_FOUND, cancelOfferResponse.getStatusCode());
+    }
+
+    @Test
+    public void testGetNonExistingOffer() {
+        ResponseEntity<Offer> retrieveOfferResponse = restTemplate.getForEntity("/offers/{offerId}", Offer.class, 99999L);
+        assertEquals(HttpStatus.NOT_FOUND, retrieveOfferResponse.getStatusCode());
+    }
+
+    @Test
+    public void testGetExpiredOffer() throws InterruptedException {
+        /**
+         * Create offer valid for ~30 seconds.
+         */
+        Offer initialOffer = createDummyOfferValidFor(20);
+
+        ResponseEntity<Offer> createOfferResponse = restTemplate.postForEntity("/offers", initialOffer, Offer.class);
+        Offer createdOffer = createOfferResponse.getBody();
+        assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
+        assertTrue(createdOffer.getId() > 0);
+
+        /**
+         * At this time the offer should be available.
+         */
+        Offer retrievedOffer = restTemplate.getForObject("/offers/{offerId}", Offer.class, createdOffer.getId());
+        assertNotNull(retrievedOffer);
+        assertEquals(createdOffer, retrievedOffer);
+
+        /**
+         * Wait for the offer to expire.
+         */
+        SECONDS.sleep(30);
+
+        ResponseEntity<Offer> retrieveOfferResponse = restTemplate.getForEntity("/offers/{offerId}", Offer.class, createdOffer.getId());
+        assertEquals(HttpStatus.GONE, retrieveOfferResponse.getStatusCode());
+    }
+
+    @Test
+    public void testGetOffers() throws InterruptedException {
+        /**
+         * Get initial number of offers.
+         */
+        ResponseEntity<List<Offer>> retrieveOffersResponse = restTemplate.exchange("/offers", HttpMethod.GET, null, new ParameterizedTypeReference<List<Offer>>(){});
+        assertEquals(HttpStatus.OK, retrieveOffersResponse.getStatusCode());
+        int initialNumberOfOffers = retrieveOffersResponse.getBody().size();
+
+        /**
+         * Create two more valid offers and one that expires in 20 seconds.
+         */
+        ResponseEntity<Offer> createOfferResponse = null;
+
+        createOfferResponse = restTemplate.postForEntity("/offers", createDummyOffer(), Offer.class);
+        assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
+
+        createOfferResponse = restTemplate.postForEntity("/offers", createDummyOffer(), Offer.class);
+        assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
+
+        createOfferResponse = restTemplate.postForEntity("/offers", createDummyOfferValidFor(20), Offer.class);
+        assertEquals(HttpStatus.CREATED, createOfferResponse.getStatusCode());
+
+        /**
+         * Wait for one offer to expire.
+         */
+        SECONDS.sleep(30);
+
+        /**
+         * Check new numbers of retrieved offers.
+         */
+        retrieveOffersResponse = restTemplate.exchange("/offers", HttpMethod.GET, null, new ParameterizedTypeReference<List<Offer>>(){});
+        assertEquals(HttpStatus.OK, retrieveOffersResponse.getStatusCode());
+        assertEquals(initialNumberOfOffers + 2, retrieveOffersResponse.getBody().size());
     }
 }

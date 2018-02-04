@@ -9,6 +9,8 @@ import java.util.Date;
 import static java.lang.System.currentTimeMillis;
 
 /**
+ * Utility methods for creating various types of offers for testing.
+ *
  * @author gabrielpadurean
  */
 public class OfferUtils {
@@ -21,6 +23,24 @@ public class OfferUtils {
         return offer;
     }
 
+    /**
+     * Creates a dummy offer valid for the given amount of seconds.
+     */
+    public static Offer createDummyOfferValidFor(int seconds) {
+        Offer offer = createDummyOffer();
+
+        offer.setStartDate(new Date());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, seconds);
+        offer.setEndDate(calendar.getTime());
+
+        return offer;
+    }
+
+    /**
+     * Create dummy offer that is already expired.
+     */
     public static Offer createDummyExpiredOffer() {
         Offer offer = createDummyOffer();
 
@@ -34,6 +54,9 @@ public class OfferUtils {
         return offer;
     }
 
+    /**
+     * Create dummy offer valid for 10 hours.
+     */
     public static Offer createDummyOffer() {
         Offer offer = new Offer();
 
@@ -44,11 +67,14 @@ public class OfferUtils {
         offer.setPrice(5d);
         offer.setCurrency(Currency.getInstance("EUR"));
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 5);
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.add(Calendar.HOUR, 5);
 
-        offer.setStartDate(new Date());
-        offer.setEndDate(calendar.getTime());
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.add(Calendar.HOUR, -5);
+
+        offer.setStartDate(endCalendar.getTime());
+        offer.setEndDate(startCalendar.getTime());
 
         return offer;
     }

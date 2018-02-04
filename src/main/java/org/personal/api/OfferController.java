@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * Controller responsible for the API endpoints exposed by the service.
+ *
  * @author gabrielpadurean
  */
 @RestController
