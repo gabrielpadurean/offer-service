@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,6 +20,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.personal.util.OfferUtils.createDummyOffer;
 import static org.personal.util.OfferUtils.createDummyOfferValidFor;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.GONE;
@@ -90,7 +91,7 @@ public class OfferControllerTestIntegration {
         assertEquals(CREATED, createOfferResponse.getStatusCode());
         assertTrue(createdOffer.getId() > 0);
 
-        ResponseEntity<String> cancelOfferResponse = restTemplate.exchange("/offers/{offerId}/cancel", HttpMethod.PUT, null, String.class, createdOffer.getId());
+        ResponseEntity<String> cancelOfferResponse = restTemplate.exchange("/offers/{offerId}/cancel", PUT, null, String.class, createdOffer.getId());
         assertEquals(NO_CONTENT, cancelOfferResponse.getStatusCode());
 
         ResponseEntity<Offer> retrieveOfferResponse = restTemplate.getForEntity("/offers/{offerId}", Offer.class, createdOffer.getId());
@@ -99,7 +100,7 @@ public class OfferControllerTestIntegration {
 
     @Test
     public void testCancelNonExistingOffer() {
-        ResponseEntity<String> cancelOfferResponse = restTemplate.exchange("/offers/{offerId}/cancel", HttpMethod.PUT, null, String.class, 9999);
+        ResponseEntity<String> cancelOfferResponse = restTemplate.exchange("/offers/{offerId}/cancel", PUT, null, String.class, 9999);
         assertEquals(NOT_FOUND, cancelOfferResponse.getStatusCode());
     }
 
@@ -142,7 +143,7 @@ public class OfferControllerTestIntegration {
         /**
          * Get initial number of offers.
          */
-        ResponseEntity<List<Offer>> retrieveOffersResponse = restTemplate.exchange("/offers", HttpMethod.GET, null, new ParameterizedTypeReference<List<Offer>>(){});
+        ResponseEntity<List<Offer>> retrieveOffersResponse = restTemplate.exchange("/offers", GET, null, new ParameterizedTypeReference<List<Offer>>(){});
         assertEquals(HttpStatus.OK, retrieveOffersResponse.getStatusCode());
         int initialNumberOfOffers = retrieveOffersResponse.getBody().size();
 
@@ -168,7 +169,7 @@ public class OfferControllerTestIntegration {
         /**
          * Check new numbers of retrieved offers.
          */
-        retrieveOffersResponse = restTemplate.exchange("/offers", HttpMethod.GET, null, new ParameterizedTypeReference<List<Offer>>(){});
+        retrieveOffersResponse = restTemplate.exchange("/offers", GET, null, new ParameterizedTypeReference<List<Offer>>(){});
         assertEquals(OK, retrieveOffersResponse.getStatusCode());
         assertEquals(initialNumberOfOffers + 2, retrieveOffersResponse.getBody().size());
     }
