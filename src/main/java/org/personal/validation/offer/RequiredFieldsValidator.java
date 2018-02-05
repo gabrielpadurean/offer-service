@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * Checks for missing field on a {@link Offer} instance.
+ * Should be used first in the chain of validators.
+ *
  * @author gabrielpadurean
  */
 @Component

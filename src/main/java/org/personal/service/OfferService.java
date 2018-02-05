@@ -16,6 +16,8 @@ import java.util.List;
 import static java.lang.String.format;
 
 /**
+ * Exposing business method related to offers.
+ *
  * @author gabrielpadurean
  */
 @Service
@@ -26,6 +28,13 @@ public class OfferService {
     private OfferRepository offerRepository;
 
 
+    /**
+     * Saves the given offer, but the object should not contain and id, otherwise operation will fail.
+     *
+     * @param offer The offer to be saved.
+     * @return The saved offer with id populated.
+     * @throws IllegalArgumentException Thrown when offer object contains an id.
+     */
     public Offer save(Offer offer) {
         if (offer.getId() != null) {
             throw new IllegalArgumentException("Offer id is not allowed for this operation");
@@ -34,6 +43,13 @@ public class OfferService {
         return offerRepository.save(offer);
     }
 
+    /**
+     * Updates the given offer. The identification is made based on id.
+     *
+     * @param offer The new updated offer to be saved.
+     * @return The newly updated offer.
+     * @throws NotFoundOfferException In case there is no offer with the given id.
+     */
     public Offer update(Offer offer) {
         if (offerRepository.findOne(offer.getId()) != null) {
             return offerRepository.save(offer);
@@ -42,6 +58,12 @@ public class OfferService {
         }
     }
 
+    /**
+     * Cancels the offer with the given id.
+     *
+     * @param offerId The id of the offer to be canceled.
+     * @throws NotFoundOfferException In case there is no offer with the given id.
+     */
     public void cancel(Long offerId) {
         Offer offer = offerRepository.findOne(offerId);
 
@@ -53,6 +75,12 @@ public class OfferService {
         }
     }
 
+    /**
+     * Deletes the offer with the given id.
+     *
+     * @param offerId The id of the offer to be deleted.
+     * @throws NotFoundOfferException In case there is no offer with the given id.
+     */
     public void delete(Long offerId) {
         if (offerRepository.findOne(offerId) != null) {
             offerRepository.delete(offerId);
@@ -61,6 +89,14 @@ public class OfferService {
         }
     }
 
+    /**
+     * Returns the offer with the given id or throws exception is not enabled or has expired.
+     *
+     * @param offerId The id of the offer to be retrieved.
+     * @return The requested offer.
+     * @throws NotFoundOfferException In case there is no offer with the given id.
+     * @throws ExpiredOfferException In case the offer is not enabled or has expired.
+     */
     public Offer get(Long offerId) {
         Offer offer = offerRepository.findOne(offerId);
 
@@ -79,6 +115,12 @@ public class OfferService {
         return offer;
     }
 
+    /**
+     * Returns all offers using a pagination approach. Only active and not expired offers are returned.
+     *
+     * @param pageable Details about the pagination.
+     * @return List of offers on the required page.
+     */
     public List<Offer> get(Pageable pageable) {
         return offerRepository.findAllActive(pageable).getContent();
     }

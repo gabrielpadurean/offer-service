@@ -7,6 +7,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
+ * Validates the dates on the {@link Offer} objects.
+ *
  * @author gabrielpadurean
  */
 @Component

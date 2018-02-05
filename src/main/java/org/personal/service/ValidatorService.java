@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * Responsible for providing validation logic.
+ *
  * @author gabrielpadurean
  */
 @Service

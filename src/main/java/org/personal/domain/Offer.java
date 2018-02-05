@@ -11,6 +11,8 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.AUTO;
 
 /**
+ * Main entity encapsulating details about an offer.
+ *
  * @author gabrielpadurean
  */
 @Entity

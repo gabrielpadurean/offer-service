@@ -7,6 +7,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
+ * Price specific validator.
+ *
  * @author gabrielpadurean
  */
 @Component
