@@ -20,7 +20,7 @@ public interface OfferRepository extends PagingAndSortingRepository<Offer, Long>
      * @param pageable Details about pagination.
      * @return Object containing offers from a page.
      */
-    @Query(value = "select offer from Offer offer where offer.enabled = true and offer.startDate <= current_date and offer.endDate >= current_date",
-            countQuery = "select count(offer) from Offer offer where offer.enabled = true and offer.startDate <= current_date and offer.endDate >= current_date")
+    @Query(value = "select offer from Offer offer where offer.enabled = true and offer.startDate <= current_timestamp and offer.endDate >= current_timestamp",
+            countQuery = "select count(offer) from Offer offer where offer.enabled = true and offer.startDate <= current_timestamp and offer.endDate >= current_timestamp")
     Page<Offer> findAllActive(Pageable pageable);
 }

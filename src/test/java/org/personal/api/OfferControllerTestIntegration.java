@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -144,7 +143,7 @@ public class OfferControllerTestIntegration {
          * Get initial number of offers.
          */
         ResponseEntity<List<Offer>> retrieveOffersResponse = restTemplate.exchange("/offers", GET, null, new ParameterizedTypeReference<List<Offer>>(){});
-        assertEquals(HttpStatus.OK, retrieveOffersResponse.getStatusCode());
+        assertEquals(OK, retrieveOffersResponse.getStatusCode());
         int initialNumberOfOffers = retrieveOffersResponse.getBody().size();
 
         /**
