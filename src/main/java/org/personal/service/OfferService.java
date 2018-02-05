@@ -5,7 +5,6 @@ import org.personal.exception.ExpiredOfferException;
 import org.personal.exception.NotFoundOfferException;
 import org.personal.repository.OfferRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import java.time.Instant;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Exposing business method related to offers.
@@ -22,7 +22,7 @@ import static java.lang.String.format;
  */
 @Service
 public class OfferService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OfferService.class);
+    private static final Logger LOGGER = getLogger(OfferService.class);
 
     @Autowired
     private OfferRepository offerRepository;

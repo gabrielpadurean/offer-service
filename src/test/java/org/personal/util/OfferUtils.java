@@ -7,6 +7,8 @@ import java.util.Currency;
 import java.util.Date;
 
 import static java.lang.System.currentTimeMillis;
+import static java.util.Calendar.HOUR;
+import static java.util.Calendar.SECOND;
 
 /**
  * Utility methods for creating various types of offers for testing.
@@ -32,7 +34,7 @@ public class OfferUtils {
         offer.setStartDate(new Date());
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, seconds);
+        calendar.add(SECOND, seconds);
         offer.setEndDate(calendar.getTime());
 
         return offer;
@@ -68,10 +70,10 @@ public class OfferUtils {
         offer.setCurrency(Currency.getInstance("EUR"));
 
         Calendar startCalendar = Calendar.getInstance();
-        startCalendar.add(Calendar.HOUR, 5);
+        startCalendar.add(HOUR, 5);
 
         Calendar endCalendar = Calendar.getInstance();
-        endCalendar.add(Calendar.HOUR, -5);
+        endCalendar.add(HOUR, -5);
 
         offer.setStartDate(endCalendar.getTime());
         offer.setEndDate(startCalendar.getTime());

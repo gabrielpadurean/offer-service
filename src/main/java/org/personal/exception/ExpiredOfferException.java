@@ -1,12 +1,13 @@
 package org.personal.exception;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import static org.springframework.http.HttpStatus.GONE;
 
 /**
  * @author gabrielpadurean
  */
-@ResponseStatus(HttpStatus.GONE)
+@ResponseStatus(GONE)
 public class ExpiredOfferException extends RuntimeException {
 
     public ExpiredOfferException(String message) {
